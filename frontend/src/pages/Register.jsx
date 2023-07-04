@@ -12,9 +12,10 @@ const Register = () => {
     email: "",
     password: "",
     password2: "",
+    admin: "",
   });
 
-  const { name, email, password, password2 } = formData;
+  const { name, email, password, password2, admin } = formData;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,14 +52,15 @@ const Register = () => {
         name,
         email,
         password,
+        admin,
       };
 
       dispatch(register(userData));
     }
   };
 
-  if(isLoading) {
-    return <Spinner />
+  if (isLoading) {
+    return <Spinner />;
   }
 
   return (
@@ -113,6 +115,17 @@ const Register = () => {
               value={password2}
               onChange={onChange}
               placeholder="Enter password again"
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-control"
+              id="admin"
+              name="admin"
+              value={admin}
+              onChange={onChange}
+              placeholder="Enter admin name"
             />
           </div>
           <div className="form-group">

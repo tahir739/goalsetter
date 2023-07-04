@@ -1,15 +1,18 @@
 const asyncHandler = require("express-async-handler");
 const Goal = require("../models/goalModel");
 const User = require("../models/userModel");
+const ModelData = require("../models/stateModel");
 
-//@desc get goals
-// @route GET /api/goals
+//@desc get ModalData
+// @route GET /api/ModelData
 // @access private
 
-const getGoals = asyncHandler(async (req, res) => {
-  const goals = await Goal.find({ user: req.user.id });
-  const goal = await Goal.find({ name: req.user.name });
-  const all = await Goal.find({});
+const getModelData = asyncHandler(async (req, res) => {
+  const data = await ModelData.find({ user: req.user.id });
+  //const goal = await Goal.find({ name: req.user.name });
+  const doneGoal = await ModelData.find({ name: req.user.name });
+  const all = await ModelData.find({});
+  // console.log(all, "all")
 
   const xz = req.user;
   const x = req.body.text;
@@ -18,9 +21,9 @@ const getGoals = asyncHandler(async (req, res) => {
     return res.status(200).json(all);
   }
 
-  all.forEach((item) => {
+   all.forEach((item) => {
     if (item.name) {
-      return res.status(200).json(goal);
+      return res.status(200).json(doneGoal);
     }
   });
 
@@ -28,28 +31,36 @@ const getGoals = asyncHandler(async (req, res) => {
     return res.status(200).json(goal);
   }*/
 
-  //return res.status(200).json(all);
+  // return res.status(200).json(all);
 });
 
-//@desc set goal
-// @route POST /api/goals
+//@desc set ModelData
+// @route POST /api/ModelData
 // @access private
 
-const setGoal = asyncHandler(async (req, res) => {
-  const { text, name, status, comments } = req.body;
-  if (!text || !name) {
+const setModelData = asyncHandler(async (req, res) => {
+  const { status, isSubmitted, date, objId, objText, name } = req.body;
+  /* if (!text || !name) {
     res.status(400);
     throw new Error("please add a text field");
+  }*/
+
+  let submitted;
+  if (status === "done") {
+    submitted = true;
   }
 
-  const goal = await Goal.create({
-    text,
-    name,
+  const modelData = await ModelData.create({
     status,
-    comments,
+    isSubmitted,
+    submitted,
+    date,
+    objId,
+    objText,
+    name,
     user: req.user.id,
   });
-  res.status(200).json(goal);
+  return res.status(200).json(modelData);
 });
 
 //@desc update goals
@@ -59,7 +70,6 @@ const setGoal = asyncHandler(async (req, res) => {
 const updateGoal = asyncHandler(async (req, res) => {
   const goal = await Goal.findById(req.params.id);
 
-  console.log("backend", req.params.id, req.body);
   if (!goal) {
     res.status(400);
     throw new Error("goal not found");
@@ -72,17 +82,16 @@ const updateGoal = asyncHandler(async (req, res) => {
   }
 
   // make sure the logged in user matches the goal user
- /* if (goal.user.toString() !== req.user.id) {
+  if (goal.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error("User not authorized");
-  }*/
+  }
 
   const updatedGoal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
-    
   });
 
-  res.status(200).json(updatedGoal); 
+  res.status(200).json(updatedGoal);
 });
 
 //@desc delete goals
@@ -115,8 +124,8 @@ const deleteGoal = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  getGoals,
-  setGoal,
+  getModelData,
+  setModelData,
   updateGoal,
   deleteGoal,
 };

@@ -1,25 +1,32 @@
 const mongoose = require("mongoose");
 
-const goalSchema = mongoose.Schema(
+const modelDataSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
-    text: {
+    objId: {
       type: String,
-      required: [true, "please add a text value"],
+    },
+    objText: {
+      type: String,
     },
     name: {
       type: String,
     },
     status: {
-     // type: String,
-     type: Boolean,
-    },
-    comments: {
       type: String,
+    },
+    isSubmitted: {
+      type: Boolean,
+    },
+    date: {
+      type: Number,
+    },
+    submitted: {
+      type: Boolean,
     },
   },
   {
@@ -27,4 +34,4 @@ const goalSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Goal", goalSchema);
+module.exports = mongoose.model("ModelData", modelDataSchema);

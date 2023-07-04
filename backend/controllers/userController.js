@@ -9,7 +9,7 @@ const { Error } = require("mongoose");
 // @access public
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, admin } = req.body;
 
   if (!name || !email || !password) {
     res.status(400);
@@ -33,6 +33,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password: hashedPassword,
+    admin,
   });
 
   if (user) {
